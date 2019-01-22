@@ -6,4 +6,9 @@ class Shout < ApplicationRecord
   validates_associated :content
 
   delegate :username, to: :user
+
+  scope :search, ->(term:) {
+      joins("LEFT JOIN text_shouts ON content_type = 'TextShout' AND content_id = text_shouts.id").
+        where("text_shouts.body LIKE ?", "%#{term}%")
+    }
 end
